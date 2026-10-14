@@ -12,7 +12,15 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Vendored Essentia.js builds (third-party, minified)
+    "public/workers/*.umd.js",
+    ".beatsync-data/**",
   ]),
+  {
+    // Tests poke at loosely-typed ffprobe JSON and parametrised presets.
+    files: ["tests/**/*.ts"],
+    rules: { "@typescript-eslint/no-explicit-any": "off" },
+  },
 ]);
 
 export default eslintConfig;

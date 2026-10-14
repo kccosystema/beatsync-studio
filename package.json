@@ -6,21 +6,33 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "typecheck": "next typegen && tsc --noEmit",
+    "test": "vitest run",
+    "test:e2e": "vitest run --config vitest.e2e.config.mts",
+    "samples": "tsx scripts/make-samples.ts samples",
+    "fx-sheet": "tsx scripts/effects-sheet.ts effects-sheet.jpg"
   },
   "dependencies": {
+    "essentia.js": "^0.1.3",
+    "idb": "^8.0.4",
+    "nanoid": "^6.0.2",
     "next": "16.4.0",
     "react": "19.3.0",
-    "react-dom": "19.3.0"
+    "react-dom": "19.3.0",
+    "wavesurfer.js": "^8.0.2",
+    "zustand": "^5.0.15"
   },
   "devDependencies": {
     "@tailwindcss/turbopack": "^4",
-    "@types/node": "^20",
+    "@types/node": "^24.19.2",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.4.0",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "tsx": "^4.23.15",
+    "typescript": "^5",
+    "vitest": "^5.0.4"
   }
 }

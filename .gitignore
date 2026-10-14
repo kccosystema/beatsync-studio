@@ -39,3 +39,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# BeatSync local render worker data
+/.beatsync-data
+/samples
+/public/samples
+/effects-sheet.jpg
