@@ -32,7 +32,7 @@ npm run app:dist     # → dist/BeatSync-Studio-<version>-arm64.dmg (Apple Silic
 - **Data:** projects are saved inside the app; uploads and renders live in `~/Library/Application Support/BeatSync Studio/data`, and the server log is `…/BeatSync Studio/server.log`.
 - **How it works:** `electron/main.cjs` starts the Next.js standalone server (`app-build/server`) on the fixed address `127.0.0.1:47100`. It must be fixed because browsers scope saved projects to the exact origin, port included. The app then opens it in a window and stops the server (and any running FFmpeg) on quit.
 - **Pieces:** `scripts/app-assemble.mjs` builds `app-build/` (standalone server + static ffmpeg/ffprobe from `ffmpeg-static`/`ffprobe-static`); `scripts/check-ffmpeg.mjs` fails the build if the bundled FFmpeg lacks an encoder or filter the exporter uses, or links non-system libraries; `build-resources/after-pack.cjs` copies the server in, because electron-builder strips `node_modules` from extra resources.
-- **Licensing:** handing the app to other people distributes Essentia.js (AGPL) and FFmpeg (GPL), so offer them the source, e.g. by making this repo public.
+- **Licensing:** BeatSync Studio is open source under the [AGPL-3.0](LICENSE) (it includes Essentia.js, which is AGPL). The .dmg also bundles separate FFmpeg/FFprobe programs (GPL; builds from the `ffmpeg-static`/`ffprobe-static` projects, source at ffmpeg.org).
 
 ## Using it
 
@@ -113,4 +113,4 @@ npm run lint && npm run typecheck
 - **Downbeat and section detection** are heuristic; the app reports confidence rather than inventing labels. Use **Sync offset**, **half/double-time** and beat-snapped trimming to correct the grid.
 - **Uploads for export** are copied to `.beatsync-data/` next to the app (the local render worker's cache; entries unused for 14 days are removed). Exports are kept for 3 hours.
 - Max 60 media items per project (a 32-clip import + edit + export was tested in the browser).
-- **Licensing:** Essentia.js is AGPL-3.0. That's fine for local/personal use; distributing this app publicly means complying with the AGPL (or swapping in the built-in tracker, which is already wired as the fallback).
+- **Licensing:** the whole app is AGPL-3.0 (see [LICENSE](LICENSE)) because it includes Essentia.js; the source is public, which covers hosting it or sharing the Mac app.
