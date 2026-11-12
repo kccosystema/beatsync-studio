@@ -34,6 +34,22 @@ interface Job {
 const g = globalThis as unknown as { __beatsyncJobs?: Map<string, Job> };
 const jobs: Map<string, Job> = (g.__beatsyncJobs ??= new Map());
 
+// Don't leave FFmpeg running when the server stops (e.g. the Mac app quits mid-export).
+const gp = globalThis as unknown as { __beatsyncExitHook?: boolean };
+if (!gp.__beatsyncExitHook) {
+  gp.__beatsyncExitHook = true;
+  const killAll = () => {
+    for (const job of jobs.values()) for (const p of job.procs) p.kill("SIGKILL");
+  };
+  process.on("exit", killAll);
+  for (const sig of ["SIGTERM", "SIGINT"] as const) {
+    process.once(sig, () => {
+      killAll();
+      process.exit(0);
+    });
+  }
+}
+
 export function getJob(id: string) {
   return jobs.get(id);
 }

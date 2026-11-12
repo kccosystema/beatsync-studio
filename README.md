@@ -20,6 +20,20 @@ Want something to try it with? `npm run samples` generates a royalty-free 64-sec
 
 If FFmpeg lives elsewhere, set `FFMPEG_PATH` / `FFPROBE_PATH`. The export dialog checks the render worker and tells you if FFmpeg is missing.
 
+## Mac app (.dmg)
+
+BeatSync also ships as a self-contained Mac app: no Terminal, no Node, no Homebrew. It bundles its own server and a static FFmpeg.
+
+```bash
+npm run app:dist     # → dist/BeatSync-Studio-<version>-arm64.dmg (Apple Silicon)
+```
+
+- **Install:** open the .dmg and drag **BeatSync Studio** into Applications. The first time, macOS may say it can't verify the developer: right-click the app → **Open** (or System Settings → Privacy & Security → **Open Anyway**). The app is ad-hoc signed, not notarized; that needs an Apple Developer account.
+- **Data:** projects are saved inside the app; uploads and renders live in `~/Library/Application Support/BeatSync Studio/data`, and the server log is `…/BeatSync Studio/server.log`.
+- **How it works:** `electron/main.cjs` starts the Next.js standalone server (`app-build/server`) on the fixed address `127.0.0.1:47100`. It must be fixed because browsers scope saved projects to the exact origin, port included. The app then opens it in a window and stops the server (and any running FFmpeg) on quit.
+- **Pieces:** `scripts/app-assemble.mjs` builds `app-build/` (standalone server + static ffmpeg/ffprobe from `ffmpeg-static`/`ffprobe-static`); `scripts/check-ffmpeg.mjs` fails the build if the bundled FFmpeg lacks an encoder or filter the exporter uses, or links non-system libraries; `build-resources/after-pack.cjs` copies the server in, because electron-builder strips `node_modules` from extra resources.
+- **Licensing:** handing the app to other people distributes Essentia.js (AGPL) and FFmpeg (GPL), so offer them the source, e.g. by making this repo public.
+
 ## Using it
 
 1. **Add a song** (MP3, WAV, M4A, AAC — anything your browser can decode). It's analysed in the background: BPM, beats, downbeats, energy, transients and energy sections appear in the media panel and on the timeline.
